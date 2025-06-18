@@ -15,7 +15,7 @@ app.get("/", (req, res) => {
 
 app.post("/api/generate", async (req, res) => {
   try {
-    const { imageUrl, prompt, negative_prompt, num_inference_steps, guidance_scale, prompt_strength, seed } = req.body;
+    const { image, prompt, negative_prompt, num_inference_steps, guidance_scale, prompt_strength, seed } = req.body;
 
     const replicateResponse = await fetch("https://api.replicate.com/v1/predictions", {
       method: "POST",
@@ -26,9 +26,9 @@ app.post("/api/generate", async (req, res) => {
       body: JSON.stringify({
         version: "76604baddc85b1b4616e1c6475eca080da339c8875bd4996705440484a6eac38",
         input: {
-          image: imageUrl,
+          image: image,
           prompt: prompt,
-          negative_prompt: negative_prompt || "lowres, watermark, text, blurry",
+          negative_prompt: negative_prompt || "lowres, watermark, blurry, out of focus",
           num_inference_steps: num_inference_steps || 50,
           guidance_scale: guidance_scale || 15,
           prompt_strength: prompt_strength || 0.8,
