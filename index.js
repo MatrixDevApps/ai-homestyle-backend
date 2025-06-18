@@ -24,7 +24,7 @@ app.post("/api/generate", async (req, res) => {
         "Content-Type": "application/json"
       },
       body: JSON.stringify({
-        version: "7f604efcd4f442f61281f6161e49bd5b94836b07fc1bb578d64c7b7f4db8a64a",
+        version: "76604baddc85b1b4616e1c6475eca080da339c8875bd4996705440484a6eac38",
         input: {
           image: imageUrl,
           prompt: prompt,
