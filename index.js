@@ -52,6 +52,49 @@ app.post("/api/generate", async (req, res) => {
   }
 });
 
+// NEW ENDPOINT - Add this here
+app.get('/api/result/:predictionId', async (req, res) => {
+  try {
+    const { predictionId } = req.params;
+    
+    if (!predictionId) {
+      return res.status(400).json({ error: 'Prediction ID is required' });
+    }
+
+    console.log(`🔍 Fetching result for prediction: ${predictionId}`);
+
+    const replicateResponse = await fetch(
+      `https://api.replicate.com/v1/predictions/${predictionId}`,
+      {
+        method: 'GET',
+        headers: {
+          'Authorization': `Token ${process.env.REPLICATE_API_KEY}`,
+          'Content-Type': 'application/json',
+        },
+      }
+    );
+
+    if (!replicateResponse.ok) {
+      console.error(`❌ Replicate API error: ${replicateResponse.status}`);
+      return res.status(replicateResponse.status).json({ 
+        error: `Failed to fetch prediction: ${replicateResponse.status}` 
+      });
+    }
+
+    const predictionData = await replicateResponse.json();
+    console.log(`📊 Prediction status: ${predictionData.status}`);
+    
+    res.json(predictionData);
+
+  } catch (error) {
+    console.error('❌ Error fetching prediction result:', error);
+    res.status(500).json({ 
+      error: 'Internal server error',
+      details: error.message 
+    });
+  }
+});
+
 app.listen(port, () => {
   console.log(`AI HomeStyle backend running on port ${port}`);
 });
